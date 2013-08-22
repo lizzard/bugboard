@@ -1,18 +1,5 @@
 // [IRC Nick, Email, Commit Access Level]
 var users = [
- ["Debloper", "debloper@gmail.com", 1],
- ["Optimizer", "scrapmachines@gmail.com", 3],
- ["sankha93", "sankha93@gmail.com", 1],
- ["Sawrubh", "saurabhanandiit@gmail.com", 3],
- ["ShellHacker","sudheesh1995@yahoo.com",0],
- ["abhishekp","abhishekp.bugzilla@gmail.com", 1],
- ["greatwarrior","amod.narvekar@gmail.com",1],
- ["darkowlzz", "indiasuny000@gmail.com", 1],
- ["MrDHat", "ktyaks@gmail.com", 0],
- ["SunilJoshi", "joshi_sunil@in.com", 0],
- ["Sayak", "sayak.bugsmith@gmail.com", 0],
- ["Infinity", "junky.argonaut@gmail.com", 1],
- ["sushant","hiraysushant@gmail.com",0],
- ["jhk","jigneshhk1992@gmail.com",1],
- ["kaustavdm", "kaustav.dasmodak@yahoo.co.in", 0]
+ ["lizzard", "lhenry@mozilla.com", 0],
+ ["tiziana", "tiziana.sellitto@gmail.com", 0]
 ];
