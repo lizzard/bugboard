@@ -1,4 +1,4 @@
-# Mozilla India Developer Leaderboard
+# Mozilla Bug wrangler dashboard
 
 How awesome are you among your peers? Find out in this leaderboard.
 
