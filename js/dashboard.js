@@ -9,6 +9,8 @@ for (var i = 0; i < details.length; i++) {
   }
 }
 var pushed = JSON.parse(localStorage.getItem("data-pushed") || '{}');
+var numConfirmedRecieved = 0;
+var numResolvedRecieved = 0;
 var numFixedRecieved = 0;
 var numAssignedRecieved = 0;
 var numComponentsRecieved = 0;
@@ -39,7 +41,9 @@ function sortResults() {
 }
 
 function maybeUpdateLocalStorage() {
-  if (numComponentsRecieved == users.length &&
+  if (numConfirmedRecieved == users.length &&
+      numResolvedRecieved == users.length &&
+      numComponentsRecieved == users.length &&
       numAssignedRecieved == users.length &&
       numFixedRecieved == users.length) {
     localStorage.removeItem("data-pushed");
@@ -84,16 +88,21 @@ for (var i = 0; i < users.length; i++) {
       break;
   }
 
-  var fixed = "", assigned = "", component = "";
+  var confirmed="",resolved="", fixed = "", assigned = "", component = "";
   if (pushed[trimmedEmail] != undefined) {
     var obj = details[pushed[trimmedEmail]];
+    confirmed= obj.c > -1 ? obj.c: "";
+    resolved = obj.r > -1 ? obj.r: "";
     fixed = obj.f > -1 ? obj.f: "";
     assigned = obj.a > -1 ? obj.a: "";
     component = obj.c || "";
   }
+    
   buffer += '<tr id="' + trimmedEmail + '">' +
     '<td><img class="avatar" src="http://www.gravatar.com/avatar/' + hash + '?s=48"></td>' +
     '<td><a href="mailto:' + email + '">' + name + '</a></td>' +
+    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?f1=bug_status&o1=changedby&o2=changedto&f2=bug_status&v2=NEW&v1=' + email + '"><span class="badge confirmed" value="' + confirmed + '">' + confirmed + '</span></a></td>'+
+    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?f1=resolution&o1=changedby&bug_status=RESOLVED&v1=' + email + '"><span class="badge resolved" value="' + resolved + '">' + resolved + '</span></a></td>'+
     '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?quicksearch=ALL%20assignee%3A' + email + '"><span class="badge assigned" value="' + assigned + '">' + assigned + '</span></a></td>' +
     '<td align="center"><span class="badge fixed" value="' + fixed + '">' + fixed + '</span></td>' +
     '<td align="center">' + access + '</td>' +
@@ -112,6 +121,37 @@ for (var i = 0; i < users.length; i++) {
   var email = users[i][1];
   var trimmedEmail = email.replace(/[.@]/g, "");
 
+    // Count Unconfirmed to new 
+    bugzilla.countBugs({
+        "field0-0-0": "status",
+        "type0-0-0": "changed_by",
+        "value0-0-0": email,
+        changed_field:"status",
+        changed_field_to:"NEW"
+    }, function(error, confirmed) {
+        if (error) {
+            return;
+        }
+    details[pushed[this]].c = confirmed;
+    $("#" + this + " .confirmed").text(confirmed).attr("value", confirmed);
+    maybeUpdateLocalStorage(++numConfirmedRecieved);
+ }.bind(trimmedEmail));
+    
+    // Count RESOLVED
+    bugzilla.countBugs({
+        "field0-0-0": "resolution",
+        "type0-0-0": "changed_by",
+        "value0-0-0": email,
+        status: ['RESOLVED']
+    }, function(error, resolved) {
+        if (error) {
+            return;
+        }
+    details[pushed[this]].r = resolved;
+    $("#" + this + " .resolved").text(resolved).attr("value", resolved);
+    maybeUpdateLocalStorage(++numResolvedRecieved);
+ }.bind(trimmedEmail));
+    
   // Count fixed
   bugzilla.countBugs({
     "field0-0-0": "attachment.is_patch",
