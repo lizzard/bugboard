@@ -70,6 +70,7 @@ for (var i = 0; i < users.length; i++) {
   var name = users[i][0];
   var email = users[i][1];
   var trimmedEmail = email.replace(/[.@]/g, "");
+  var encodedEmail = encodeURIComponent(email);
   var access = "";
   switch(users[i][2]) {
     case 1:
@@ -94,12 +95,12 @@ for (var i = 0; i < users.length; i++) {
     assigned = obj.a > -1 ? obj.a: "";
     component = obj.c || "";
   }
-    
+  
   buffer += '<tr id="' + trimmedEmail + '">' +
     '<td><img class="avatar" src="http://www.gravatar.com/avatar/' + hash + '?s=48"></td>' +
     '<td><a href="mailto:' + email + '">' + name + '</a></td>' +
-    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?j_top=AND_G&f1=bug_status&o3=changedfrom&v3=UNCONFIRMED&o1=changedby&o2=changedto&f3=bug_status&f2=bug_status&v2=NEW&v1=' + email + '"><span class="badge confirmed" value="' + confirmed + '">' + confirmed + '</span></a></td>'+
-    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?quicksearch=ALL%20assignee%3A' + email + '"><span class="badge assigned" value="' + assigned + '">' + assigned + '</span></a></td>' +
+    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?j_top=AND_G&f1=bug_status&o3=changedfrom&v3=UNCONFIRMED&o1=changedby&o2=changedto&f3=bug_status&f2=bug_status&v2=NEW&v1=' + encodedEmail + '"><span class="badge confirmed" value="' + confirmed + '">' + confirmed + '</span></a></td>'+
+    '<td align="center"><a target="_blank" href="https://bugzilla.mozilla.org/buglist.cgi?quicksearch=ALL%20assignee%3A' + encodedEmail + '"><span class="badge assigned" value="' + assigned + '">' + assigned + '</span></a></td>' +
     '<td align="center"><span class="badge fixed" value="' + fixed + '">' + fixed + '</span></td>' +
     '<td align="center">' + access + '</td>' +
     '<td align="right" class="component">' + component + '</td>' +
